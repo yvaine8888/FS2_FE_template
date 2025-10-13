@@ -2,6 +2,14 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Lesson 9 TODO Guide
+
+The `ContactForm` component is annotated with Lesson 9 TODOs to help you wire the UI to your Express server:
+
+- **Step 1** – Look for the `Lesson 9 TODO` comment above the `useState` hook in `client/src/components/contactForm.jsx` to understand how form data is being collected.
+- **Step 2** – Update the `Lesson 9 TODO` near the Axios `.post` call once your Express POST route is implemented. Be sure to create a `.env` file in the `client` directory and define `REACT_APP_API_BASE_URL` to match your server URL.
+- **Step 3** – Follow the `Lesson 9 TODO` above the `handleSubmit` function along with the inline note about replacing the temporary `console.log` statements so you can provide user-facing success or error messages.
+
 ## Available Scripts
 
 In the project directory, you can run:
