@@ -19,11 +19,12 @@ const NavBar = (props) => {
 
           <img className="icons" src={acct} alt=""></img>
 
-          <button onClick={props.cartPath} id="cart-btn">
-            {" "}
-            {props.length}
+          <Link to="/cart" id="cart-btn">
+            Cart (
+            {/* TODO: Replace this fallback count with real cart state in Lesson 9. */}
+            {props.length ?? 0})
             <img src={cartlogo} alt=""></img>
-          </button>
+          </Link>
         </div>
         <div id="links">
           <Link className="navlink" to="/">
