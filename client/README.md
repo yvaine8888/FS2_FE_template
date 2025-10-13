@@ -2,13 +2,33 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Lesson 9 TODO Guide
+## Lesson 9: Wiring the Contact Form to Express
 
-The `ContactForm` component is annotated with Lesson 9 TODOs to help you wire the UI to your Express server:
+Lesson 9 focuses on taking the front-end contact form and connecting it to the Express API that students build in the back-end lessons. The UI now contains TODO markers that walk through the work you will complete in this lesson.
 
-- **Step 1** – Look for the `Lesson 9 TODO` comment above the `useState` hook in `client/src/components/contactForm.jsx` to understand how form data is being collected.
-- **Step 2** – Update the `Lesson 9 TODO` near the Axios `.post` call once your Express POST route is implemented. Be sure to create a `.env` file in the `client` directory and define `REACT_APP_API_BASE_URL` to match your server URL.
-- **Step 3** – Follow the `Lesson 9 TODO` above the `handleSubmit` function along with the inline note about replacing the temporary `console.log` statements so you can provide user-facing success or error messages.
+### Step-by-step guide
+
+1. **Collect the form data (Lesson 9 TODO – Step 1)**
+   - Open `client/src/components/contactForm.jsx` and find the `Lesson 9 TODO` comment above the `useState` hook.
+   - Review how the component stores `firstname`, `lastname`, `email`, and `subject` in state.
+   - If you add additional form fields, remember to extend both the state shape and the JSX inputs so the data stays in sync.
+
+2. **Prepare the Express endpoint (Lesson 9 TODO – Step 2)**
+   - Stand up your Express server following the Lesson 9 instructions from the back-end curriculum.
+   - Create a POST route (e.g., `/submit-form`) that accepts the payload you are collecting in the React component.
+   - In the React app, create a `.env` file in the `client` directory and set `REACT_APP_API_BASE_URL` to the origin of your Express server (for example `http://localhost:3001`). Restart the dev server after changing environment variables.
+   - The Axios `.post` call in `handleSubmit` uses this environment variable. Once your server route is ready, remove or adjust the TODO comment to reflect your implementation.
+
+3. **Handle success and failure (Lesson 9 TODO – Step 3)**
+   - Inside `handleSubmit`, notice the TODO reminders for success and error handling next to the `console.log` statements.
+   - Replace these temporary logs with UI feedback, such as setting component state that displays a confirmation message or an error banner to the user.
+   - Consider clearing the form on success so users can submit another message without refreshing the page.
+
+### Testing your connection
+
+- Use a REST client (such as Insomnia or Postman) or browser DevTools to monitor the network request when submitting the form.
+- Verify the Express server receives the payload that matches your expected schema.
+- Confirm the client handles both 2xx responses and error responses from the server.
 
 ## Available Scripts
 
@@ -16,23 +36,23 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.\
+Runs the app in the development mode.  
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
+The page will reload when you make changes.  
 You may also see any lint errors in the console.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
+Launches the test runner in the interactive watch mode.  
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
+Builds the app for production to the `build` folder.  
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
+The build is minified and the filenames include the hashes.  
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
