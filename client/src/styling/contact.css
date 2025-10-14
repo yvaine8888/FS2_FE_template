@@ -16,6 +16,23 @@
   padding: 20px;
 }
 
+.status-message {
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.status-message.success {
+  background-color: #e6ffed;
+  color: #046c4e;
+}
+
+.status-message.error {
+  background-color: #ffe6e6;
+  color: #9e1c1c;
+}
+
 .name,
 select,
 textarea {
@@ -29,7 +46,7 @@ textarea {
   resize: vertical;
 }
 
-input[type="submit"] {
+.submit-button {
   background-color: rgb(0, 92, 122);
   color: white;
   padding: 12px 20px;
@@ -38,6 +55,6 @@ input[type="submit"] {
   cursor: pointer;
 }
 
-input[type="submit"]:hover {
+.submit-button:hover {
   background-color: #000b70;
 }
