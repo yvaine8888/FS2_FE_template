@@ -1,7 +1,8 @@
+require('dotenv').config();      // load server/.env
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mysql = require('mysql');
+const mysql2 = require('mysql2');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Create a small pool of reusable connections to the MySQL database that was
 // created in Lesson 9. Environment variables allow instructors/students to
 // override the defaults without touching the code.
-const db = mysql.createPool({
+const db = mysql2.createPool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
@@ -33,7 +34,7 @@ app.post('/submit-form', (req, res) => {
 
   // Insert the form submission into the "contact" table built in MySQL Workbench.
   const sqlInsert =
-    'INSERT INTO contact (First_name, Last_name, Email, message) VALUES (?, ?, ?, ?)';
+    'INSERT INTO contact (firstname, lastname, email, subject) VALUES (?, ?, ?, ?)';
 
   db.query(sqlInsert, [firstname, lastname, email, subject], (err) => {
     if (err) {
