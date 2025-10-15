@@ -28,6 +28,20 @@ app.post('/submit-form', (req, res) => {
 // Optional: quick health check
 app.get('/health', (req, res) => res.json({ ok: true }));
 
+app.get('/api/ecommerce/products', (req, res) => {
+  const sql = 'SELECT * FROM products';
+
+  db.query(sql, (err, rows) => {
+    if (err) {
+      console.error('Error fetching products:', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.json(rows);
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
