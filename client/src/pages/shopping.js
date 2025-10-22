@@ -2,29 +2,30 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NavBar from "../components/nav";
 
+const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
+
 const PAGE_PRODUCTS = "products";
 const PAGE_CART = "cart";
 
 const Shopping = () => {
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [productsLoading, setProductsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cartList, setCartList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(PAGE_PRODUCTS);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data } = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/api/ecommerce/products`
-        );
+        const { data } = await axios.get(`${API}/api/ecommerce/products`);
         setProducts(data);
         setError(null);
       } catch (err) {
         console.error(err);
         setError("Unable to load products. Please try again later.");
       } finally {
-        setIsLoading(false);
+        setProductsLoading(false);
       }
     };
 
@@ -32,28 +33,18 @@ const Shopping = () => {
   }, []);
 
   useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      try {
-        setCartList(JSON.parse(savedCart));
-      } catch (error) {
-        console.error("Unable to parse saved cart:", error);
-      }
-    }
+    axios
+      .get(`${API}/api/ecommerce/cart`)
+      .then((res) => setCartList(res.data))
+      .catch((err) => console.error("Unable to load cart:", err))
+      .finally(() => setLoading(false));
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartList));
-  }, [cartList]);
 
   const addToCart = (product) => {
     axios
-      .post(
-        `${process.env.REACT_APP_API_BASE_URL}/api/ecommerce/cart`,
-        {
-          product,
-        }
-      )
+      .post(`${API}/api/ecommerce/cart`, {
+        product,
+      })
       .then(() => {
         setCartList((prevCart) => [...prevCart, product]);
       })
@@ -64,11 +55,13 @@ const Shopping = () => {
 
   const removeFromCart = (id) => {
     axios
-      .delete(
-        `${process.env.REACT_APP_API_BASE_URL}/api/ecommerce/cart/${id}`
-      )
+      .delete(`${API}/api/ecommerce/cart/${id}`)
       .then(() => {
-        setCartList((prevCart) => prevCart.filter((item) => item.id !== id));
+        setCartList((prevCart) =>
+          prevCart.filter(
+            (item) => String(item.id) !== String(id)
+          )
+        );
       })
       .catch((err) => {
         console.error("Unable to remove from cart:", err);
@@ -101,12 +94,12 @@ const Shopping = () => {
         </button>
       </header>
       <div id="shopping">
-        {isLoading && <p>Loading products...</p>}
+        {productsLoading && <p>Loading products...</p>}
         {error && <p>{error}</p>}
-        {!isLoading && !error && products.length === 0 && (
+        {!productsLoading && !error && products.length === 0 && (
           <p>No products available at the moment.</p>
         )}
-        {!isLoading && !error &&
+        {!productsLoading && !error &&
           products.map((product) => (
             <div className="card" key={product.id}>
               <div id="product">
@@ -153,6 +146,8 @@ const Shopping = () => {
       </div>
     </>
   );
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="main">

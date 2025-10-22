@@ -42,6 +42,19 @@ app.get('/api/ecommerce/products', (req, res) => {
   });
 });
 
+// Get current cart items from DB
+app.get('/api/ecommerce/cart', (req, res) => {
+  const sql = 'SELECT * FROM cart ORDER BY id DESC'; // no created_at assumption
+  db.query(sql, (err, rows) => {
+    if (err) {
+      console.error('Error fetching cart:', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+    res.json(rows);
+  });
+});
+
+
 app.post('/api/ecommerce/cart', (req, res) => {
   const { product } = req.body;
 
