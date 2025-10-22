@@ -199,7 +199,49 @@ app.get('/api/ecommerce/products', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
 });
-```
+
+---
+
+## Lesson 12: Cart Feature
+
+Lesson 12 builds on the catalog experience by introducing a persistent shopping cart that is backed by MySQL and synchronized with the frontend.
+
+### Database Update
+
+- Create a `cart` table to store the items a shopper adds to their cart:
+
+  ```sql
+  CREATE TABLE cart (
+    id INT PRIMARY KEY,
+    name VARCHAR(255),
+    description TEXT,
+    image_url VARCHAR(255),
+    price DECIMAL(10,2)
+  );
+  ```
+
+  This schema mirrors the product information needed to render the cart view.
+
+### API Changes
+
+- `POST /api/ecommerce/cart` – accepts a `product` object in the request body and inserts it into the `cart` table.
+- `DELETE /api/ecommerce/cart/:id` – removes the matching product from the `cart` table.
+
+### Frontend Changes
+
+- The **Shopping** page now:
+  - Initializes `cartList` state from `localStorage` and persists changes back to `localStorage`.
+  - Sends `POST` requests when adding products and `DELETE` requests when removing products from the cart.
+  - Renders a cart view with "Remove from Cart" buttons and a "Back to Products" navigation option.
+
+### Testing
+
+1. Start the Express server and React client.
+2. Browse to the shopping page and click **Add to Cart** on any product.
+3. Open the cart view to confirm the product appears.
+4. Click **Remove from Cart** to verify the item is deleted.
+
+With these updates in place, the lesson 12 branch reflects the state students should have at the end of the exercise.
 
 ---
 

@@ -6,12 +6,11 @@ const PAGE_PRODUCTS = "products";
 const PAGE_CART = "cart";
 
 const Shopping = () => {
-  const [cartList, setCartList] = useState([]);
-  const [page, setPage] = useState(PAGE_PRODUCTS);
-
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [cartList, setCartList] = useState([]);
+  const [page, setPage] = useState(PAGE_PRODUCTS);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -32,8 +31,48 @@ const Shopping = () => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      try {
+        setCartList(JSON.parse(savedCart));
+      } catch (error) {
+        console.error("Unable to parse saved cart:", error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartList));
+  }, [cartList]);
+
   const addToCart = (product) => {
-    setCartList([...cartList, product]);
+    axios
+      .post(
+        `${process.env.REACT_APP_API_BASE_URL}/api/ecommerce/cart`,
+        {
+          product,
+        }
+      )
+      .then(() => {
+        setCartList((prevCart) => [...prevCart, product]);
+      })
+      .catch((err) => {
+        console.error("Unable to add to cart:", err);
+      });
+  };
+
+  const removeFromCart = (id) => {
+    axios
+      .delete(
+        `${process.env.REACT_APP_API_BASE_URL}/api/ecommerce/cart/${id}`
+      )
+      .then(() => {
+        setCartList((prevCart) => prevCart.filter((item) => item.id !== id));
+      })
+      .catch((err) => {
+        console.error("Unable to remove from cart:", err);
+      });
   };
 
   const navigateTo = (nextPage) => {
@@ -94,6 +133,8 @@ const Shopping = () => {
 
         <h1 id="cart-title"> Cart </h1>
 
+        {cartList.length === 0 && <p>Your cart is empty.</p>}
+
         {cartList.map((product) => (
           <div className="card card-container" key={product.id}>
             <div id="product">
@@ -103,18 +144,19 @@ const Shopping = () => {
               <h2> {product.name} </h2>
               <h3> {product.description} </h3>
               <h3> {formatPrice(product.price)} </h3>
+              <button onClick={() => removeFromCart(product.id)}>
+                Remove from Cart
+              </button>
             </div>
           </div>
         ))}
-        <button id="checkout-btn">Checkout</button>
       </div>
     </>
   );
 
   return (
     <div className="main">
-      {renderProducts()}
-      {page === PAGE_CART && renderCart()}
+      {page === PAGE_PRODUCTS ? renderProducts() : renderCart()}
       <NavBar length={cartList.length} />
     </div>
   );

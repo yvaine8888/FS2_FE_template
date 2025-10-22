@@ -42,6 +42,48 @@ app.get('/api/ecommerce/products', (req, res) => {
   });
 });
 
+app.post('/api/ecommerce/cart', (req, res) => {
+  const { product } = req.body;
+
+  if (!product) {
+    return res.status(400).json({ message: 'Product data is required.' });
+  }
+
+  const sql =
+    'INSERT INTO cart (id, name, description, image_url, price) VALUES (?, ?, ?, ?, ?)';
+  const values = [
+    product.id,
+    product.name,
+    product.description,
+    product.image_url,
+    product.price,
+  ];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Error adding product to cart:', err);
+      return res.status(500).send('Server error');
+    }
+
+    res.json(result);
+  });
+});
+
+app.delete('/api/ecommerce/cart/:id', (req, res) => {
+  const { id } = req.params;
+
+  const sql = 'DELETE FROM cart WHERE id = ?';
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('Error removing product from cart:', err);
+      return res.status(500).send('Server error');
+    }
+
+    res.json(result);
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
