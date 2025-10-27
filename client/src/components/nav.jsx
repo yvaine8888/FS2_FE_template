@@ -4,7 +4,7 @@ import logo from "../images/logo.png";
 import cartlogo from "../images/cartlogo.png";
 import { Link } from "react-router-dom";
 
-const NavBar = (props) => {
+const NavBar = ({ searchTerm = "", setSearchTerm, ...props }) => {
   return (
     <>
       <div className="nav">
@@ -14,6 +14,8 @@ const NavBar = (props) => {
             type="text"
             className="search-box"
             placeholder="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           ></input>
           <button className="search-btn">search</button>
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import NavBar from "../components/nav";
 
 const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
 
@@ -152,7 +151,6 @@ const Shopping = () => {
   return (
     <div className="main">
       {page === PAGE_PRODUCTS ? renderProducts() : renderCart()}
-      <NavBar length={cartList.length} />
     </div>
   );
 };
