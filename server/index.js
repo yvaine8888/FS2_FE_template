@@ -29,9 +29,11 @@ app.post('/submit-form', (req, res) => {
 app.get('/health', (req, res) => res.json({ ok: true }));
 
 app.get('/api/ecommerce/products', (req, res) => {
-  const sql = 'SELECT * FROM products';
+  const searchTerm = req.query.search || '';
+  const sql = `SELECT * FROM products WHERE name LIKE ?`;
+  const values = [`%${searchTerm}%`];
 
-  db.query(sql, (err, rows) => {
+  db.query(sql, values, (err, rows) => {
     if (err) {
       console.error('Error fetching products:', err);
       return res.status(500).json({ message: 'Database error' });
