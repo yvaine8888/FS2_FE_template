@@ -6,7 +6,8 @@ const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
 const PAGE_PRODUCTS = "products";
 const PAGE_CART = "cart";
 
-const Shopping = ({ searchTerm }) => {
+const Shopping = (props) => {
+  const { searchTerm } = props;
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
@@ -34,18 +35,11 @@ const Shopping = ({ searchTerm }) => {
   }, []);
 
   useEffect(() => {
-    const normalizedSearch = (searchTerm || "").toLowerCase();
-
-    if (!normalizedSearch) {
-      setFilteredProducts(products);
-      return;
-    }
-
-    const updatedProducts = products.filter((product) =>
-      (product?.name || "").toLowerCase().includes(normalizedSearch)
+    setFilteredProducts(
+      products.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
     );
-
-    setFilteredProducts(updatedProducts);
   }, [products, searchTerm]);
 
   useEffect(() => {
