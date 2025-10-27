@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Product from "../components/product";
 
 const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
 
@@ -68,9 +69,7 @@ const Shopping = (props) => {
       .delete(`${API}/api/ecommerce/cart/${id}`)
       .then(() => {
         setCartList((prevCart) =>
-          prevCart.filter(
-            (item) => String(item.id) !== String(id)
-          )
+          prevCart.filter((item) => String(item.id) !== String(id))
         );
       })
       .catch((err) => {
@@ -96,7 +95,16 @@ const Shopping = (props) => {
     return typeof price === "number" ? currencyFormatter.format(price) : price;
   };
 
-  const renderProducts = () => (
+  const renderProducts = () =>
+    filteredProducts.map((product) => (
+      <Product
+        key={product.id}
+        product={product}
+        addToCart={addToCart}
+      />
+    ));
+
+  const renderProductPage = () => (
     <>
       <header id="shopping-head">
         <button onClick={() => navigateTo(PAGE_CART)} id="goToCart">
@@ -109,20 +117,9 @@ const Shopping = (props) => {
         {!productsLoading && !error && filteredProducts.length === 0 && (
           <p>No products available at the moment.</p>
         )}
-        {!productsLoading && !error &&
-          filteredProducts.map((product) => (
-            <div className="card" key={product.id}>
-              <div id="product">
-                {product.image_url && (
-                  <img src={product.image_url} alt={product.name || "Product"} />
-                )}
-                <h2> {product.name} </h2>
-                <h3> {product.description} </h3>
-                <h3> {formatPrice(product.price)} </h3>
-                <button onClick={() => addToCart(product)}> Add to Cart </button>
-              </div>
-            </div>
-          ))}
+        {!productsLoading && !error && filteredProducts.length > 0 && (
+          renderProducts()
+        )}
       </div>
     </>
   );
@@ -161,7 +158,7 @@ const Shopping = (props) => {
 
   return (
     <div className="main">
-      {page === PAGE_PRODUCTS ? renderProducts() : renderCart()}
+      {page === PAGE_PRODUCTS ? renderProductPage() : renderCart()}
     </div>
   );
 };
