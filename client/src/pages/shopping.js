@@ -6,8 +6,9 @@ const API = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
 const PAGE_PRODUCTS = "products";
 const PAGE_CART = "cart";
 
-const Shopping = () => {
+const Shopping = ({ searchTerm }) => {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cartList, setCartList] = useState([]);
@@ -19,6 +20,7 @@ const Shopping = () => {
       try {
         const { data } = await axios.get(`${API}/api/ecommerce/products`);
         setProducts(data);
+        setFilteredProducts(data);
         setError(null);
       } catch (err) {
         console.error(err);
@@ -30,6 +32,21 @@ const Shopping = () => {
 
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    const normalizedSearch = (searchTerm || "").toLowerCase();
+
+    if (!normalizedSearch) {
+      setFilteredProducts(products);
+      return;
+    }
+
+    const updatedProducts = products.filter((product) =>
+      (product?.name || "").toLowerCase().includes(normalizedSearch)
+    );
+
+    setFilteredProducts(updatedProducts);
+  }, [products, searchTerm]);
 
   useEffect(() => {
     axios
@@ -95,11 +112,11 @@ const Shopping = () => {
       <div id="shopping">
         {productsLoading && <p>Loading products...</p>}
         {error && <p>{error}</p>}
-        {!productsLoading && !error && products.length === 0 && (
+        {!productsLoading && !error && filteredProducts.length === 0 && (
           <p>No products available at the moment.</p>
         )}
         {!productsLoading && !error &&
-          products.map((product) => (
+          filteredProducts.map((product) => (
             <div className="card" key={product.id}>
               <div id="product">
                 {product.image_url && (
