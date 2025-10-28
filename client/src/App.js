@@ -46,6 +46,7 @@ function App() {
             path="/shopping"
             element={<Shopping searchTerm={searchTerm} />}
           />
+          <Route path="*" element={<div>Page not found</div>} />
         </Routes>
       </BrowserRouter>
     </>
