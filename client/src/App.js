@@ -11,12 +11,12 @@ import "./styling/hero.css";
 import "./styling/featured.css";
 
 
-import About from "./pages/about";
-import Account from "./pages/account";
-import Cart from "./pages/cart";
-import Contact from "./pages/contact";
-import Shopping from "./pages/shopping";
-import Home from "./pages/home";
+import About from "./pages/about.js";
+import Account from "./pages/account.js";
+import Cart from "./pages/cart.js";
+import Contact from "./pages/contact.js";
+import Shopping from "./pages/shopping.js";
+import Home from "./pages/home.js";
 
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
