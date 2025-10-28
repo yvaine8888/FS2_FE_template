@@ -2,38 +2,56 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const ContactForm = () => {
-  // Lesson 9 TODO: Step 1 – Collect the form data in component state so it can be sent to your server.
-  const [formData, setFormData] = useState({
+  // Store the current values entered into the form. This mirrors the columns in
+  // the "contact" table we created in MySQL Workbench.
+  const initialFormData = {
     firstname: "",
     lastname: "",
     email: "",
     subject: "",
-  });
+  };
 
-  // Lesson 9 TODO: Step 2 – Send this data to your Express endpoint once it's implemented.
-  // Lesson 9 TODO: Step 3 – Handle both success and failure responses from the server.
+  const [formData, setFormData] = useState(initialFormData);
+
+  // Track the message we want to show back to the learner after they click
+  // submit. This will display success or error feedback above the form.
+  const [statusMessage, setStatusMessage] = useState(null);
+  const [statusType, setStatusType] = useState(null);
+
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
+
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      // Reminder: set REACT_APP_API_BASE_URL in your .env once your Express server is up.
-      .post(`${process.env.REACT_APP_API_BASE_URL}/submit-form`, formData)
+      // The base URL defaults to localhost so the code works right away in class.
+      .post(`${apiBaseUrl}/submit-form`, formData)
       .then((response) => {
-        console.log(response.data);
-        // TODO: replace this console.log with user feedback once the POST route is working.
+        setStatusType("success");
+        setStatusMessage(response.data.message);
+        setFormData(initialFormData);
       })
       .catch((error) => {
-        console.log(error);
-        // TODO: surface an error message to the user once the POST route is working.
+        console.error(error);
+        setStatusType("error");
+        setStatusMessage(
+          error.response?.data?.message ||
+            "We hit a snag saving your message. Please try again."
+        );
       });
   };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+    setStatusMessage(null);
+    setStatusType(null);
   };
 
   return (
     <div id="contact">
+      {statusMessage && (
+        <p className={`status-message ${statusType}`}>{statusMessage}</p>
+      )}
       <form onSubmit={handleSubmit}>
         <label htmlFor="fname">First Name</label>
         <input
@@ -58,7 +76,9 @@ const ContactForm = () => {
         />
 
         <label htmlFor="email">Email Address</label>
-        <textarea
+        <input
+          type="email"
+          className="name"
           id="email"
           name="email"
           placeholder="Please leave an email address where we can reach you"
@@ -75,7 +95,9 @@ const ContactForm = () => {
           onChange={handleInputChange}
         />
 
-        <button type="submit">Submit</button>
+        <button type="submit" className="submit-button">
+          Submit
+        </button>
       </form>
     </div>
   );

@@ -13,17 +13,41 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ Using mysql2 + dotenv
 // TODO: Configure this pool with your schema credentials from Lesson 9.
-const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+const db = mysql2.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'e-commerce',
 });
 
-// TODO: Implement /submit-form to handle form data and insert into your database
 app.post('/submit-form', (req, res) => {
-  res.status(501).json({ message: 'Not implemented yet' });
+  // Pull the values that were sent from the React contact form.
+  const { firstname, lastname, email, subject } = req.body;
+
+  // Guard clause to help students debug missing form fields quickly.
+  if (!firstname || !lastname || !email || !subject) {
+    return res.status(400).json({
+      message: 'Please fill out the entire form before submitting.',
+    });
+  }
+
+  // Insert the form submission into the "contact" table built in MySQL Workbench.
+  const sqlInsert =
+    'INSERT INTO contact (firstname, lastname, email, subject) VALUES (?, ?, ?, ?)';
+
+  db.query(sqlInsert, [firstname, lastname, email, subject], (err) => {
+    if (err) {
+      console.error('Failed to save contact form submission:', err);
+      return res.status(500).json({
+        message: 'Something went wrong while saving your message. Please try again.',
+      });
+    }
+
+    // Let the front end know that the insert was successful.
+    res.status(201).json({ message: 'Thank you! Your message has been sent.' });
+  });
 });
+
 
 // Optional: quick health check
 app.get('/health', (req, res) => res.json({ ok: true }));
@@ -34,6 +58,20 @@ app.get('/api/ecommerce/products', (req, res) => {
   const values = [`%${searchTerm}%`];
 
   db.query(sql, values, (err, rows) => {
+    if (err) {
+      console.error('Error fetching products:', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.json(rows);
+  });
+});
+
+app.get('/api/ecommerce/products', (req, res) => {
+  const sql = 'SELECT * FROM products';
+
+  db.query(sql, (err, rows) => {
     if (err) {
       console.error('Error fetching products:', err);
       return res.status(500).json({ message: 'Database error' });
