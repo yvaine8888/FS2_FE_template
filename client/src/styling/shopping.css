@@ -17,8 +17,8 @@
   min-width: 200px;
   max-width: 260px;
   min-height: 280px;
-  background-color: rgb(144, 146, 158);
-  border: solid black;
+  background-color: #FFE5D9;
+  border: solid #9D8189;
   padding: 16px;
   margin-bottom: 15px;
   display: flex;
@@ -106,7 +106,7 @@ img {
   padding-bottom: 80px;
   margin-top: 120px;
   width: 70vw;
-  border: solid red;
+  border: solid #9D8189;
   background-color: white;
   max-height: 50vh;
   overflow-y: scroll;

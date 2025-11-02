@@ -51,18 +51,23 @@ const Shopping = (props) => {
       .finally(() => setLoading(false));
   }, []);
 
+  const isProductInCart = (productId) => {
+    return cartList.some(item => String(item.id) === String(productId));
+  };
+
   const addToCart = (product) => {
     axios
-      .post(`${API}/api/ecommerce/cart`, {
-        product,
-      })
-      .then(() => {
-        setCartList((prevCart) => [...prevCart, product]);
-      })
-      .catch((err) => {
-        console.error("Unable to add to cart:", err);
-      });
+    .post(`${API}/api/ecommerce/cart`, {
+      product,
+    })
+    .then(() => {
+      setCartList((prevCart) => [...prevCart, product]);
+    })
+    .catch((err) => {
+      console.error("Unable to add to cart:", err);
+    });
   };
+
 
   const removeFromCart = (id) => {
     axios
@@ -75,6 +80,14 @@ const Shopping = (props) => {
       .catch((err) => {
         console.error("Unable to remove from cart:", err);
       });
+  };
+
+  const handleCartAction = (product) => {
+    if (isProductInCart(product.id)) {
+      removeFromCart(product.id);
+    } else {
+      addToCart(product);
+    }
   };
 
   const navigateTo = (nextPage) => {
@@ -100,7 +113,8 @@ const Shopping = (props) => {
       <Product
         key={product.id}
         product={product}
-        addToCart={addToCart}
+        handleCartAction={handleCartAction}
+        isProductInCart={isProductInCart}
       />
     ));
 
@@ -144,7 +158,7 @@ const Shopping = (props) => {
               <h2> {product.name} </h2>
               <h3> {product.description} </h3>
               <h3> {formatPrice(product.price)} </h3>
-              <button onClick={() => removeFromCart(product.id)}>
+              <button onClick={() => handleCartAction(product)}>
                 Remove from Cart
               </button>
             </div>

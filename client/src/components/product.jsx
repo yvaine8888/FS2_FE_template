@@ -1,6 +1,6 @@
 import React from "react";
 
-const Product = ({ product, addToCart }) => {
+const Product = ({ product, handleCartAction, isProductInCart}) => {
   if (!product) {
     return null;
   }
@@ -28,7 +28,7 @@ const Product = ({ product, addToCart }) => {
         <h2>{product.name}</h2>
         <h3>{product.description}</h3>
         <h3>{formatPrice(product.price)}</h3>
-        <button onClick={() => addToCart(product)}>Add to Cart</button>
+        <button onClick={() => handleCartAction(product)}> { isProductInCart(product.id) ? "Remove from Cart" : "Add to Cart"} </button>
       </div>
     </div>
   );

@@ -5,14 +5,14 @@
   bottom: 0;
   height: 60px;
   width: 100vw;
-  border-top: solid black;
+  border-top: solid #9D8189;
   z-index: 3;
   margin-top: 50px;
 }
 
 #sct1 {
-  width: 33%;
-  background-color: whitesmoke;
+  width: 33.33%;
+  background-color: #fff5f1;
   font-family: "Courier New", Courier, monospace;
 }
 
@@ -22,15 +22,15 @@
 }
 
 #sct2 {
-  width: 33%;
-  background-color: whitesmoke;
+  width: 33.33%;
+  background-color: #fff5f1;
   font-family: "Courier New", Courier, monospace;
   text-align: center;
 }
 
 #sct3 {
-  width: 33%;
-  background-color: whitesmoke;
+  width: 33.33%;
+  background-color: #fff5f1;
   font-family: "Courier New", Courier, monospace;
 }
 

@@ -13,12 +13,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ Using mysql2 + dotenv
 // TODO: Configure this pool with your schema credentials from Lesson 9.
-const db = mysql2.createPool({
+const db = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
+  password: process.env.DB_PASSWORD, // Remove fallback for security
   database: process.env.DB_NAME || 'e-commerce',
 });
+
 
 app.post('/submit-form', (req, res) => {
   // Pull the values that were sent from the React contact form.
@@ -68,20 +69,6 @@ app.get('/api/ecommerce/products', (req, res) => {
   });
 });
 
-app.get('/api/ecommerce/products', (req, res) => {
-  const sql = 'SELECT * FROM products';
-
-  db.query(sql, (err, rows) => {
-    if (err) {
-      console.error('Error fetching products:', err);
-      return res.status(500).json({ message: 'Database error' });
-    }
-
-    res.setHeader('Content-Type', 'application/json');
-    res.json(rows);
-  });
-});
-
 // Get current cart items from DB
 app.get('/api/ecommerce/cart', (req, res) => {
   const sql = 'SELECT * FROM cart ORDER BY id DESC'; // no created_at assumption
@@ -102,8 +89,7 @@ app.post('/api/ecommerce/cart', (req, res) => {
     return res.status(400).json({ message: 'Product data is required.' });
   }
 
-  const sql =
-    'INSERT INTO cart (id, name, description, image_url, price) VALUES (?, ?, ?, ?, ?)';
+  const sql = 'INSERT INTO cart (id, name, description, image_url, price) VALUES (?, ?, ?, ?, ?)';
   const values = [
     product.id,
     product.name,

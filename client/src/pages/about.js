@@ -5,7 +5,7 @@ const About = () => {
     <>
       <div id="about">
         <h1> About Page </h1>
-        <h3> Add information about your business here!</h3>
+        <h3> We are dedicated to making our prices low and friendly!</h3>
       </div>
     </>
   );

@@ -23,7 +23,6 @@ const NavBar = ({ searchTerm = "", setSearchTerm, ...props }) => {
 
           <Link to="/cart" id="cart-btn">
             Cart (
-            {/* TODO: Replace this fallback count with real cart state in Lesson 9. */}
             {props.length ?? 0})
             <img src={cartlogo} alt=""></img>
           </Link>
