@@ -82,6 +82,17 @@ const Shopping = (props) => {
       });
   };
 
+  const buyCart = () => {
+    axios
+      .delete(`${API}/api/ecommerce/buy`)
+      .then(() => {
+        setCartList([]);
+      })
+      .catch((err) => {
+        console.error("Unable to buy cart:", err);
+      });
+  };
+
   const handleCartAction = (product) => {
     if (isProductInCart(product.id)) {
       removeFromCart(product.id);
@@ -149,21 +160,40 @@ const Shopping = (props) => {
 
         {cartList.length === 0 && <p>Your cart is empty.</p>}
 
-        {cartList.map((product) => (
-          <div className="card card-container" key={product.id}>
-            <div id="product">
-              {product.image_url && (
-                <img src={product.image_url} alt={product.name || "Product"} />
-              )}
-              <h2> {product.name} </h2>
-              <h3> {product.description} </h3>
-              <h3> {formatPrice(product.price)} </h3>
-              <button onClick={() => handleCartAction(product)}>
-                Remove from Cart
+        {cartList.length > 0 && (
+          <>
+            <div className="cart-item-list">
+              {cartList.map((product) => (
+                <div className="card card-container" key={product.id}>
+                  <div className="cart-product-details">
+                    {product.image_url && (
+                      <img src={product.image_url} alt={product.name || "Product"} />
+                    )}
+                    <div className="product-info">
+                      <h2> {product.name} </h2>
+                      <h3> {product.description} </h3>
+                      <h3> {formatPrice(product.price)} </h3>
+                      <button 
+                        onClick={() => handleCartAction(product)} 
+                        className="remove-button"
+                      >
+                        Remove from Cart
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="cart-actions">
+              <button 
+                onClick={() => buyCart()} 
+                className="buy-all-button"
+              >
+                Buy All
               </button>
             </div>
-          </div>
-        ))}
+          </>
+        )}
       </div>
     </>
   );

@@ -108,6 +108,19 @@ app.post('/api/ecommerce/cart', (req, res) => {
   });
 });
 
+app.delete('/api/ecommerce/buy', (req, res) => {
+
+  const sql = 'DELETE FROM cart';
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error('Error removing products from cart:', err);
+      return res.status(500).send('Server error');
+    }
+    res.json(result);
+  });
+});
+
 app.delete('/api/ecommerce/cart/:id', (req, res) => {
   const { id } = req.params;
 

@@ -5,6 +5,7 @@ import cartlogo from "../images/cartlogo.png";
 import { Link } from "react-router-dom";
 
 const NavBar = ({ searchTerm = "", setSearchTerm, ...props }) => {
+  const cartItemCount = props.length ?? 0;
   return (
     <>
       <div className="nav">
@@ -22,9 +23,10 @@ const NavBar = ({ searchTerm = "", setSearchTerm, ...props }) => {
           <img className="icons" src={acct} alt=""></img>
 
           <Link to="/cart" id="cart-btn">
-            Cart (
-            {props.length ?? 0})
-            <img src={cartlogo} alt=""></img>
+            <img src={cartlogo} alt="Cart"></img>
+            {cartItemCount > 0 && (
+              <span className="cart-count-badge">{cartItemCount}</span>
+            )}
           </Link>
         </div>
         <div id="links">
